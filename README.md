@@ -3,9 +3,13 @@
 Версия 1.0.0 https://github.com/AleksandrHexlet/MestoWithMongoDB.git
 
 RUS
+
 Backend часть для сервиса обмена фото.
+
 Настроена работа между Node.js и MongoDB
+
 Настроены модели,контроллеры,роуты.
+
 Технологии, используемые в проекте: ТNode.js, MongoDB , WebPack, GIT.
 
 Настроены три ветки для разных задач:
