@@ -5,20 +5,12 @@ module.exports.getUsers = (req, res) => {
     .find({})
     .then((users) => res.send({ data: users }))
     // eslint-disable-next-line no-unused-vars
-    .catch((err) => res
+    .catch(() => res
       .status(500)
-      .send({ message: 'An error happens when i send yours users' }));
+      .send({ message: 'An error happens when i send yours users' }),
+    console.log('Function getUsers have error'));
 };
 
-module.exports.getUsersByID = (req, res) => {
-  user
-    .findById(req.params.id)
-    .then((userbyID) => res.send({ data: userbyID }))
-    // eslint-disable-next-line no-unused-vars
-    .catch((err) => res
-      .status(500)
-      .send({ message: 'An error happens when i send yours user by id' }));
-};
 
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
@@ -26,7 +18,38 @@ module.exports.createUser = (req, res) => {
     .create({ name, about, avatar })
     .then((newUser) => res.send({ data: newUser }))
     // eslint-disable-next-line no-unused-vars
-    .catch((err) => res.status(500).send({ message: 'Create a new user failed' }));
+    .catch(() => res.status(500).send({ message: 'Create a new user failed' }));
+};
+
+module.exports.getUsersByID = (req, res) => {
+  user
+    .findById(req.params.id)
+    .orFail(
+      () => res
+        .status(500)
+        .send({ message: 'An error happens when i send yours user by id' }),
+      console.log(
+        'Function getUsersByID have error.An error happens when i send yours user by id',
+      ),
+    )
+    .then((userbyID) => {
+      if (userbyID) {
+        res.send({ data: userbyID });
+      } else {
+        res.status(404).send({ message: 'Пользователя с таким id не существует' });
+        console.log('Function getUsersByID has error');
+      }
+    })
+    .catch(
+      () => res
+        .status(500)
+        .send({
+          message: 'An error happens when i send yours user by id',
+        }),
+      console.log(
+        'Function getUsersByID have error.An error happens when i send yours user by id',
+      ),
+    );
 };
 
 module.exports.updateUser = (req, res) => {
@@ -40,7 +63,8 @@ module.exports.updateUser = (req, res) => {
       })
 
     .then((updUser) => res.send({ data: updUser }))
-    .catch((err) => res.status(500).send({ message: 'Update a new user failed' }));
+    .catch(() => res.status(500).send({ message: 'Update a new user failed' }),
+      console.log('Function updateUser have error'));
 };
 
 module.exports.updateAvatar = (req, res) => {
@@ -53,5 +77,6 @@ module.exports.updateAvatar = (req, res) => {
         upsert: true, // если пользователь не найден, он будет создан
       })
     .then((updAvatar) => res.send({ data: updAvatar }))
-    .catch((err) => res.status(500).send({ message: 'Update a new avatar failed' }));
+    .catch(() => res.status(500).send({ message: 'Update a new avatar failed' }),
+      console.log('Function updateUser has error'));
 };

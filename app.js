@@ -22,12 +22,22 @@ app.use((req, res, next) => {
   };
   next();
 });
+
 app.use(routerCards);
 app.use(routerUsers);
 app.use((req, res) => {
   res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
 });
 
+app.use((err, req, res) => {
+  const status = err.status || 500;
+  let { message } = err;
+  if (status === 500) {
+    console.error(err.stack || err);
+    message = 'unexpected error';
+  }
+  res.status(status).send(message);
+});
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
