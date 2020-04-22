@@ -18,20 +18,13 @@ module.exports.createUser = (req, res) => {
     .create({ name, about, avatar })
     .then((newUser) => res.send({ data: newUser }))
     // eslint-disable-next-line no-unused-vars
-    .catch(() => res.status(500).send({ message: 'Create a new user failed' }));
+    .catch(() => res.status(500).send({ message: 'Create a new user failed' }),
+      console.log('Function createUsers have error'));
 };
 
 module.exports.getUsersByID = (req, res) => {
   user
     .findById(req.params.id)
-    .orFail(
-      () => res
-        .status(500)
-        .send({ message: 'An error happens when i send yours user by id' }),
-      console.log(
-        'Function getUsersByID have error.An error happens when i send yours user by id',
-      ),
-    )
     .then((userbyID) => {
       if (userbyID) {
         res.send({ data: userbyID });
@@ -42,12 +35,9 @@ module.exports.getUsersByID = (req, res) => {
     })
     .catch(
       () => res
-        .status(500)
-        .send({
-          message: 'An error happens when i send yours user by id',
-        }),
+        .status(500).send({ message: 'User with such id does not exist' }),
       console.log(
-        'Function getUsersByID have error.An error happens when i send yours user by id',
+        'Function getUsersByID have error.',
       ),
     );
 };
@@ -63,7 +53,7 @@ module.exports.updateUser = (req, res) => {
       })
 
     .then((updUser) => res.send({ data: updUser }))
-    .catch(() => res.status(500).send({ message: 'Update a new user failed' }),
+    .catch(() => res.status(500).send({ message: 'data fields name or about are not valid' }),
       console.log('Function updateUser have error'));
 };
 
@@ -77,6 +67,6 @@ module.exports.updateAvatar = (req, res) => {
         upsert: true, // если пользователь не найден, он будет создан
       })
     .then((updAvatar) => res.send({ data: updAvatar }))
-    .catch(() => res.status(500).send({ message: 'Update a new avatar failed' }),
+    .catch(() => res.status(500).send({ message: 'data field avtar  is not valid' }),
       console.log('Function updateUser has error'));
 };

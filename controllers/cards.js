@@ -28,7 +28,7 @@ module.exports.deleteCard = (req, res) => {
       if (user) {
         res.send({ data: user });
       } else {
-        res.status(404).send({ message: 'Нет пользователя с таким id' });
+        res.status(404).send({ message: 'Карточки с таким id не существует' });
         console.log('Function deleteCard has error');
       }
     });
