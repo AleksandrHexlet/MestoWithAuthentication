@@ -4,7 +4,6 @@ module.exports.getUsers = (req, res) => {
   user
     .find({})
     .then((users) => res.send({ data: users }))
-    // eslint-disable-next-line no-unused-vars
     .catch((err) => {
       if (err) {
         res.status(400)
