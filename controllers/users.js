@@ -5,10 +5,13 @@ module.exports.getUsers = (req, res) => {
     .find({})
     .then((users) => res.send({ data: users }))
     // eslint-disable-next-line no-unused-vars
-    .catch(() => res
-      .status(500)
-      .send({ message: 'An error happens when i send yours users' }),
-    console.log('Function getUsers have error'));
+    .catch((err) => {
+      if (err) {
+        res.status(400)
+          .send({ message: `Пользователя с id: ${req.params.id} не существует` });
+        console.error(err.stack);
+      }
+    });
 };
 
 
@@ -18,8 +21,13 @@ module.exports.createUser = (req, res) => {
     .create({ name, about, avatar })
     .then((newUser) => res.send({ data: newUser }))
     // eslint-disable-next-line no-unused-vars
-    .catch(() => res.status(500).send({ message: 'Create a new user failed' }),
-      console.log('Function createUsers have error'));
+    .catch((err) => {
+      if (err) {
+        res.status(400)
+          .send({ message: 'Bad request' });
+        console.error(err.stack);
+      }
+    });
 };
 
 module.exports.getUsersByID = (req, res) => {
@@ -29,17 +37,17 @@ module.exports.getUsersByID = (req, res) => {
       if (userbyID) {
         res.send({ data: userbyID });
       } else {
-        res.status(404).send({ message: 'Пользователя с таким id не существует' });
+        res.status(404).send({ message: `Пользователя с id: ${req.params.id} не существует` });
         console.log('Function getUsersByID has error');
       }
     })
-    .catch(
-      () => res
-        .status(500).send({ message: 'User with such id does not exist' }),
-      console.log(
-        'Function getUsersByID have error.',
-      ),
-    );
+    .catch((err) => {
+      if (err) {
+        res.status(400)
+          .send({ message: `Пользователя с id: ${req.params.id} не существует` });
+        console.error(err.stack);
+      }
+    });
 };
 
 module.exports.updateUser = (req, res) => {
@@ -51,12 +59,15 @@ module.exports.updateUser = (req, res) => {
         runValidators: true, // данные будут валидированы перед изменением
         upsert: true, // если пользователь не найден, он будет создан
       })
-
     .then((updUser) => res.send({ data: updUser }))
-    .catch(() => res.status(500).send({ message: 'data fields name or about are not valid' }),
-      console.log('Function updateUser have error'));
+    .catch((err) => {
+      if (err) {
+        res.status(400)
+          .send({ message: `Обноление пользователя с id: ${req.params.id} невозможно` });
+        console.error(err.stack);
+      }
+    });
 };
-
 module.exports.updateAvatar = (req, res) => {
   const { avatar } = req.body;
   user
@@ -67,6 +78,11 @@ module.exports.updateAvatar = (req, res) => {
         upsert: true, // если пользователь не найден, он будет создан
       })
     .then((updAvatar) => res.send({ data: updAvatar }))
-    .catch(() => res.status(500).send({ message: 'data field avtar  is not valid' }),
-      console.log('Function updateUser has error'));
+    .catch((err) => {
+      if (err) {
+        res.status(400)
+          .send({ message: `Обноление аваарат с id: ${req.params.id} невозможно` });
+        console.error(err.stack);
+      }
+    });
 };

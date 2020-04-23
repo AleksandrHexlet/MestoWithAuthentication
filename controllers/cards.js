@@ -5,22 +5,30 @@ module.exports.getCards = (req, res) => {
   card
     .find({})
     .then((cards) => res.send({ data: cards }))
-    .catch(() => res
-      .status(500)
-      .send({ message: 'An error happens when i send yours cards' }));
+    .catch((err) => {
+      if (err) {
+        res.status(400)
+          .send({ message: 'Bad request' });
+        console.error(err.stack);
+      }
+    });
 };
 
 module.exports.createCard = (req, res) => {
+  const owner = req.user._id;
+
   const { name, link } = req.body;
   card
-    .create({ name, link })
+    .create({ name, link, owner })
     .then((cards) => res.send({ data: cards }))
-    .catch(() => res
-      .status(500)
-      .send({ message: 'An error happens when i create yours cards' }),
-    console.log('Function updateUser have error'));
+    .catch((err) => {
+      if (err) {
+        res.status(400)
+          .send({ message: 'Bad request' });
+        console.error(err.stack);
+      }
+    });
 };
-
 module.exports.deleteCard = (req, res) => {
   card
     .findByIdAndRemove(req.params.id)
@@ -28,8 +36,15 @@ module.exports.deleteCard = (req, res) => {
       if (user) {
         res.send({ data: user });
       } else {
-        res.status(404).send({ message: 'Карточки с таким id не существует' });
-        console.log('Function deleteCard has error');
+        res.status(400).send({ message: `Карточки с id: ${req.params.id} не существует` });
+        console.error();
+      }
+    })
+    .catch((err) => {
+      if (err) {
+        res.status(400)
+          .send({ message: `Карточки с id: ${req.params.id} не существует` });
+        console.error(err.stack);
       }
     });
 };
@@ -42,14 +57,17 @@ module.exports.likeCard = (req, res) => {
       if (like) {
         res.send({ data: like });
       } else {
-        res.status(404).send({ message: 'Карточки с таким id не существует' });
+        res.status(400).send({ message: `Карточки с id: ${req.params.id} не существует` });
         console.log('Function likeCard has error');
       }
     })
-    .catch(() => res
-      .status(500)
-      .send({ message: 'An error happens when i set like in yours cards' }),
-    console.log('Function likeUser have error'));
+    .catch((err) => {
+      if (err) {
+        res.status(400)
+          .send({ message: `Карточки с id: ${req.params.id} не существует` });
+        console.error(err.stack);
+      }
+    });
 };
 
 module.exports.dislikeCard = (req, res) => {
@@ -63,12 +81,24 @@ module.exports.dislikeCard = (req, res) => {
       if (like) {
         res.send({ data: like });
       } else {
-        res.status(404).send({ message: 'Карточки с таким id не существует' });
+        res.status(404).send({ message: `Карточки с id: ${req.params.id} не существует` });
         console.log('Function dislikeCard has error');
       }
     })
-    .catch(() => res
-      .status(500)
-      .send({ message: 'An error happens when i set like in yours cards' }),
-    console.log('Function updateUser have error'));
+    .catch((err) => {
+      if (err) {
+        res.status(400)
+          .send({ message: `Карточки с id: ${req.params.id} не существует` });
+        console.error(err.stack);
+      }
+    });
 };
+
+
+// card.create ({name, link}).then (cards => {
+//   if (cards) {
+//     res.send ({data: cards});
+//   } else {
+//     res.status (404).send ({message: 'An error happens'});
+//   }
+// });

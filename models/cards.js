@@ -5,13 +5,13 @@ const mongoose = require('mongoose');
 const cardSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: 'Please enter your name',
     minlength: 2,
     maxlength: 30,
   },
   link: {
     type: String,
-    required: true,
+    required: 'true',
     validate: {
       validator: (value) => validator.isURL(value),
     },
@@ -19,7 +19,7 @@ const cardSchema = new mongoose.Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
-    required: true,
+    required: 'Please send your name',
   },
   likes: [{
     type: mongoose.Schema.Types.ObjectId,
