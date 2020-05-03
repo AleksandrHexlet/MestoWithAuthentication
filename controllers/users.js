@@ -70,7 +70,6 @@ module.exports.getUsersByID = (req, res) => {
 
 module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
-  
   user
     .findByIdAndUpdate(req.user._id, { name, about },
       {
