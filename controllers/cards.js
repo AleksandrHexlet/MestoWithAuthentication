@@ -30,8 +30,17 @@ module.exports.createCard = (req, res) => {
     });
 };
 module.exports.deleteCard = (req, res) => {
-  card
-    .findByIdAndRemove(req.params.id)
+  card.findById(req.params.id)
+    .then((cardWithId) => {
+      const { owner } = cardWithId;
+      return owner;
+    })
+    .then((owner) => {
+      if (req.user._id === owner.toString()) {
+        return card.findByIdAndRemove(req.params.id);
+      }
+      return Promise.reject(new Error('Чтобы удалить карточку,вам необходимо быть её владельцем.'));
+    })
     .then((user) => {
       if (user) {
         res.send({ data: user });
@@ -43,7 +52,7 @@ module.exports.deleteCard = (req, res) => {
     .catch((err) => {
       if (err) {
         res.status(400)
-          .send({ message: `Карточки с id: ${req.params.id} не существует` });
+          .send({ message: 'Чтобы удалить карточку,вам необходимо быть её владельцем.' });
         console.error(err.stack);
       }
     });
