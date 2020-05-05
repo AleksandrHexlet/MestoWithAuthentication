@@ -16,7 +16,6 @@ module.exports.getUsers = (req, res) => {
       }
     });
 };
-
 module.exports.createUser = (req, res) => {
   if (req.body.password.length <= 7) {
     return res
