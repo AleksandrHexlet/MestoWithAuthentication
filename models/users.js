@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 // eslint-disable-next-line import/no-unresolved
 const validator = require('validator');
 
+const uniqueValidator = require('mongoose-unique-validator');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -31,7 +32,6 @@ const userSchema = new mongoose.Schema({
     },
     validate: {
       validator: (value) => validator.isEmail(value),
-
     },
   },
   password: {
@@ -45,6 +45,7 @@ const userSchema = new mongoose.Schema({
     // в строке поиска email ===> user.findOne ({email}).select('+password') надо к findOne добавить .select ('+password')
   },
 });
+userSchema.plugin(uniqueValidator);
 
 module.exports = mongoose.model('user', userSchema);
 

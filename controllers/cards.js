@@ -30,33 +30,33 @@ module.exports.createCard = (req, res) => {
     });
 };
 module.exports.deleteCard = (req, res) => {
-  card.findById(req.params.id)
+  card
+    .findById(req.params.id)
     .then((cardWithId) => {
-      const { owner } = cardWithId;
-      return owner;
+      if (cardWithId) {
+        const { owner } = cardWithId;
+        return owner;
+      }
+      return Promise.reject(
+        new Error(`Карточки с id: ${req.params.id} не существует`),
+      );
     })
     .then((owner) => {
       if (req.user._id === owner.toString()) {
         return card.findByIdAndRemove(req.params.id);
       }
-      return Promise.reject(new Error('Чтобы удалить карточку,вам необходимо быть её владельцем.'));
+      return Promise.reject(
+        new Error('Чтобы удалить карточку,вам необходимо быть её владельцем.'),
+      );
     })
     .then((user) => {
       if (user) {
         res.send({ data: user });
-      } else {
-        res.status(400).send({ message: `Карточки с id: ${req.params.id} не существует` });
-        console.error();
       }
     })
-    .catch((err) => {
-      if (err) {
-        res.status(400)
-          .send({ message: 'Чтобы удалить карточку,вам необходимо быть её владельцем.' });
-        console.error(err.stack);
-      }
-    });
+    .catch((err) => res.status(500).send({ message: err.message }));
 };
+
 module.exports.likeCard = (req, res) => {
   card
     .findByIdAndUpdate(req.params.cardId,
@@ -78,7 +78,6 @@ module.exports.likeCard = (req, res) => {
       }
     });
 };
-
 module.exports.dislikeCard = (req, res) => {
   card
     .findByIdAndUpdate(
@@ -102,3 +101,8 @@ module.exports.dislikeCard = (req, res) => {
       }
     });
 };
+
+
+// return res
+// .status(400)
+// .send({ message: `Карточки с id: ${req.params.id} не существует` });
