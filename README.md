@@ -1,7 +1,6 @@
-#  MestoWithMongoDB
-## Backend part for service for uploading photos
-Версия 1.0.2 https://github.com/AleksandrHexlet/MestoWithMongoDB.git
-
+# MestoWithAuthentication
+## Backend part for service for uploading photos with authentication
+Версия 1.0.0 https://github.com/AleksandrHexlet/MestoWithAuthentication
 RUS
 
 Для развертывания проекта локально необходимо:
@@ -11,6 +10,12 @@ RUS
 - запустить сервер npm run start.
 Сервер заупускается на http://localhost:3000/
 Для выполнения запросов используйте Postman или другую подобную программу:
+авторизация
+- Необходимо пройти регистрацию. Для регистрации используйте отправку запросов в Postman;
+- Необходимо в Postman в закладке authorization выбрать схему Bearer token и вставить токен из файла jwt_secret.env и отправить запрос на localhost:3000//signup для создания пользователя в базе данных
+- дальше необходимо отправить запрос на localhost:3000//signin для авторизации.
+- далее вам будет присвоен секретный ключ который сохранится в браузере и вам не потребуется вводить логин и пароль при каждом входе;
+- после авторизации вы сможете создать нового пользователя отправив запрос localhost:3000//signup
 работа с пользователями
 - GET /users возвращает всех пользователей из базы;
 - GET /users/:userId возвращает конкретного пользователя;
